@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Health Juxt — area image check</title>
+    <style>
+      :root {
+        --bg: #0f1720;
+        --panel: #18222e;
+        --panel-2: #1f2c3a;
+        --ink: #eef3f8;
+        --muted: #9fb0c0;
+        --accent: #3ea6ff;
+        --warn: #f4b740;
+        --warn-bg: rgba(244, 183, 64, 0.14);
+        --bad: #e74c3c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: radial-gradient(1200px 600px at 50% -10%, #1b2a3a, var(--bg));
+        color: var(--ink);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 28px 18px 64px; }
+      h1 { margin: 0 0 4px; font-size: 1.6rem; }
+      p.lede { color: var(--muted); margin: 0 0 18px; }
+      .controls { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; flex-wrap: wrap; }
+      button {
+        font: inherit; font-weight: 600; border: none; border-radius: 10px;
+        padding: 10px 18px; cursor: pointer; background: var(--accent); color: #04263f;
+      }
+      label { color: var(--muted); font-size: 0.9rem; display: flex; gap: 6px; align-items: center; }
+      .summary { font-weight: 600; margin-bottom: 16px; min-height: 1.4em; }
+      .summary .flagcount { color: var(--warn); }
+      .grid {
+        display: grid; gap: 14px;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      }
+      .item {
+        background: var(--panel); border: 2px solid transparent;
+        border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
+      }
+      .item.flagged { border-color: var(--warn); background: var(--warn-bg); }
+      .thumb {
+        height: 130px; background: var(--panel-2); background-size: cover;
+        background-position: center; display: flex; align-items: center;
+        justify-content: center; color: var(--muted); font-size: 0.85rem;
+      }
+      .meta { padding: 10px 12px; }
+      .name { font-weight: 700; }
+      .title { font-size: 0.82rem; color: var(--muted); word-break: break-word; }
+      .file { font-size: 0.74rem; color: var(--muted); word-break: break-all; margin-top: 4px; }
+      .badge {
+        display: inline-block; font-size: 0.72rem; font-weight: 700;
+        padding: 2px 8px; border-radius: 99px; margin-top: 6px;
+      }
+      .badge.warn { background: var(--warn); color: #3a2a00; }
+      .badge.ok { background: rgba(62, 166, 255, 0.18); color: var(--accent); }
+      .badge.none { background: rgba(231, 76, 60, 0.2); color: var(--bad); }
+      a { color: var(--accent); }
+      .links { font-size: 0.8rem; margin-top: 8px; display: flex; gap: 12px; flex-wrap: wrap; }
+      code { background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 5px; font-size: 0.8rem; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Area image check</h1>
+      <p class="lede">
+        Fetches the Wikipedia thumbnail the game would show for each area, so you
+        can spot any that aren't a real photo (a coat of arms, flag or map).
+        Flagged items are a heuristic guess from the image filename — eyeball the
+        picture to decide. To fix one, add
+        <code>wiki: "Better article title"</code> to that region in
+        <code>data.js</code>.
+      </p>
+
+      <div class="controls">
+        <button id="recheck">Re-check all</button>
+        <label><input type="checkbox" id="onlyflagged" /> Show only flagged</label>
+      </div>
+
+      <div class="summary" id="summary">Loading…</div>
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <script src="../data.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var REGIONS = (window.PH_DATA && window.PH_DATA.REGIONS) || [];
+        var grid = document.getElementById("grid");
+        var summary = document.getElementById("summary");
+        var onlyFlagged = document.getElementById("onlyflagged");
+
+        // Filenames that usually mean "not a photo".
+        var SUSPECT = /coat[_ ]?of[_ ]?arms|\barms\b|\bflag\b|locator|\bmap\b|escutcheon|logo|emblem|\.svg(?:$|\?)/i;
+
+        function title(region) {
+          return region.wiki || region.name;
+        }
+
+        function classify(src) {
+          if (!src) return "none";
+          var file = decodeURIComponent(src.split("/").pop() || "");
+          return SUSPECT.test(file) ? "warn" : "ok";
+        }
+
+        function fetchSummary(region) {
+          var url =
+            "https://en.wikipedia.org/api/rest_v1/page/summary/" +
+            encodeURIComponent(title(region));
+          return fetch(url, { headers: { Accept: "application/json" } })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; });
+        }
+
+        function fileName(src) {
+          if (!src) return "—";
+          return decodeURIComponent(src.split("/").pop() || "");
+        }
+
+        function render(results) {
+          grid.innerHTML = "";
+          var flagged = 0;
+          var missing = 0;
+          results.forEach(function (res) {
+            var verdict = classify(res.thumb);
+            if (verdict === "warn") flagged++;
+            if (verdict === "none") missing++;
+            if (onlyFlagged.checked && verdict === "ok") return;
+
+            var item = document.createElement("div");
+            item.className = "item" + (verdict !== "ok" ? " flagged" : "");
+
+            var thumb = document.createElement("div");
+            thumb.className = "thumb";
+            if (res.thumb) thumb.style.backgroundImage = 'url("' + res.thumb + '")';
+            else thumb.textContent = "no image";
+
+            var badge =
+              verdict === "warn"
+                ? '<span class="badge warn">likely not a photo</span>'
+                : verdict === "none"
+                ? '<span class="badge none">no image</span>'
+                : '<span class="badge ok">looks like a photo</span>';
+
+            var pageUrl =
+              "https://en.wikipedia.org/wiki/" +
+              encodeURIComponent(title(res.region).replace(/ /g, "_"));
+            var searchUrl =
+              "https://en.wikipedia.org/w/index.php?search=" +
+              encodeURIComponent(res.region.name);
+
+            var meta = document.createElement("div");
+            meta.className = "meta";
+            meta.innerHTML =
+              '<div class="name">' + res.region.name + "</div>" +
+              '<div class="title">article: ' + title(res.region) + "</div>" +
+              '<div class="file">' + fileName(res.thumb) + "</div>" +
+              badge +
+              '<div class="links">' +
+              '<a href="' + pageUrl + '" target="_blank" rel="noopener">open article</a>' +
+              '<a href="' + searchUrl + '" target="_blank" rel="noopener">find another</a>' +
+              "</div>";
+
+            item.appendChild(thumb);
+            item.appendChild(meta);
+            grid.appendChild(item);
+          });
+
+          summary.innerHTML =
+            results.length +
+            " areas checked — " +
+            '<span class="flagcount">' +
+            (flagged + missing) +
+            " to review</span> (" +
+            flagged +
+            " likely-not-photo, " +
+            missing +
+            " missing).";
+        }
+
+        function run() {
+          summary.textContent = "Fetching " + REGIONS.length + " areas…";
+          grid.innerHTML = "";
+          Promise.all(
+            REGIONS.map(function (region) {
+              return fetchSummary(region).then(function (data) {
+                return {
+                  region: region,
+                  thumb: (data && data.thumbnail && data.thumbnail.source) || null,
+                };
+              });
+            })
+          ).then(render);
+        }
+
+        document.getElementById("recheck").addEventListener("click", run);
+        onlyFlagged.addEventListener("change", run);
+        run();
+      })();
+    </script>
+  </body>
+</html>
