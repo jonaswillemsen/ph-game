@@ -2,10 +2,10 @@
 // ---------------------------------------------------------------------------
 // A set of English upper-tier / unitary local authorities with a handful of
 // well-known public health indicators. Unlike earlier drafts, the figures
-// below are REAL values pulled from the OHID Fingertips API (the latest period
-// published for each indicator at the time of the snapshot — see SOURCE below),
-// for area type 502 "Upper tier local authorities (post 4/23)". Values are
-// rounded to one decimal place for display.
+// below are REAL values pulled from the OHID Fingertips API (for each indicator,
+// the latest period for which every area has data — see SOURCE below), for area
+// type 502 "Upper tier local authorities (post 4/23)". Values are rounded to one
+// decimal place for display.
 //
 // Each metric carries a `higherIsBetter` flag so the game can explain, after
 // you answer, whether the higher figure is the "healthier" one, plus the
@@ -104,6 +104,67 @@ const METRICS = {
     indicatorId: 241,
     period: "2024/25",
   },
+  hypertension: {
+    label: "Hypertension",
+    short: "percentage of people with diagnosed high blood pressure",
+    unit: "%",
+    higherIsBetter: false,
+    description:
+      "Percentage of patients on GP registers with recorded high blood " +
+      "pressure (QOF).",
+    indicatorId: 219,
+    period: "2024/25",
+  },
+  depression: {
+    label: "Depression",
+    short: "recorded depression prevalence",
+    unit: "%",
+    higherIsBetter: false,
+    description: "Percentage of patients (18+) with recorded depression (QOF).",
+    indicatorId: 848,
+    period: "2024/25",
+  },
+  asthma: {
+    label: "Asthma",
+    short: "recorded asthma prevalence",
+    unit: "%",
+    higherIsBetter: false,
+    description: "Percentage of patients (6+) with recorded asthma (QOF).",
+    indicatorId: 90933,
+    period: "2024/25",
+  },
+  copd: {
+    label: "COPD",
+    short: "recorded COPD prevalence",
+    unit: "%",
+    higherIsBetter: false,
+    description:
+      "Percentage of patients with recorded chronic obstructive pulmonary " +
+      "disease (QOF).",
+    indicatorId: 253,
+    period: "2024/25",
+  },
+  dementiaDiagnosis: {
+    label: "Dementia diagnosis rate",
+    short: "dementia diagnosis rate in over-65s",
+    unit: "%",
+    higherIsBetter: true,
+    description:
+      "Estimated share of people aged 65+ living with dementia who have a " +
+      "formal diagnosis — higher means more cases are identified.",
+    indicatorId: 92949,
+    period: "2025",
+  },
+  lowBirthWeight: {
+    label: "Low birth weight",
+    short: "percentage of term babies born at a low birth weight",
+    unit: "%",
+    higherIsBetter: false,
+    description:
+      "Percentage of full-term babies (37+ weeks) born weighing under 2,500g.",
+    indicatorId: 20101,
+    period: "2024",
+  },
 };
 
 // `code` is the ONS area code, used to trace each row back to Fingertips.
@@ -113,121 +174,121 @@ const REGIONS = [
     region: "London",
     code: "E09000020",
     wiki: "Royal Borough of Kensington and Chelsea",
-    stats: { lifeExpectancyMale: 84.6, lifeExpectancyFemale: 87.0, adultObesity: 12.2, childObesity: 18.0, smoking: 8.4, physicalActivity: 68.3, cvdMortality: 41.9, diabetes: 4.5 },
+    stats: { lifeExpectancyMale: 84.6, lifeExpectancyFemale: 87.0, adultObesity: 12.2, childObesity: 18.0, smoking: 8.4, physicalActivity: 68.3, cvdMortality: 41.9, diabetes: 4.5, hypertension: 9.4, depression: 9.2, asthma: 3.6, copd: 1.0, dementiaDiagnosis: 55.7, lowBirthWeight: 2.6 },
   },
   {
     name: "Westminster",
     region: "London",
     code: "E09000033",
-    stats: { lifeExpectancyMale: 83.2, lifeExpectancyFemale: 86.3, adultObesity: 20.3, childObesity: 24.2, smoking: 14.1, physicalActivity: 68.3, cvdMortality: 44.2, diabetes: 4.2 },
+    stats: { lifeExpectancyMale: 83.2, lifeExpectancyFemale: 86.3, adultObesity: 20.3, childObesity: 24.2, smoking: 14.1, physicalActivity: 68.3, cvdMortality: 44.2, diabetes: 4.2, hypertension: 7.8, depression: 7.1, asthma: 3.4, copd: 0.8, dementiaDiagnosis: 64.6, lowBirthWeight: 3.6 },
   },
   {
     name: "Richmond upon Thames",
     region: "London",
     code: "E09000027",
-    stats: { lifeExpectancyMale: 83.6, lifeExpectancyFemale: 87.2, adultObesity: 10.5, childObesity: 12.1, smoking: 9.3, physicalActivity: 77.8, cvdMortality: 48.8, diabetes: 4.6 },
+    stats: { lifeExpectancyMale: 83.6, lifeExpectancyFemale: 87.2, adultObesity: 10.5, childObesity: 12.1, smoking: 9.3, physicalActivity: 77.8, cvdMortality: 48.8, diabetes: 4.6, hypertension: 10.7, depression: 11.6, asthma: 4.9, copd: 1.1, dementiaDiagnosis: 66.6, lowBirthWeight: 2.6 },
   },
   {
     name: "Wokingham",
     region: "South East",
     code: "E06000041",
-    stats: { lifeExpectancyMale: 82.7, lifeExpectancyFemale: 87.3, adultObesity: 18.5, childObesity: 16.6, smoking: 7.1, physicalActivity: 75.3, cvdMortality: 48.7, diabetes: 6.5 },
+    stats: { lifeExpectancyMale: 82.7, lifeExpectancyFemale: 87.3, adultObesity: 18.5, childObesity: 16.6, smoking: 7.1, physicalActivity: 75.3, cvdMortality: 48.7, diabetes: 6.5, hypertension: 13.9, depression: 13.0, asthma: 6.3, copd: 1.0, dementiaDiagnosis: 64.2, lowBirthWeight: 2.5 },
   },
   {
     name: "Surrey",
     region: "South East",
     code: "E10000030",
-    stats: { lifeExpectancyMale: 82.5, lifeExpectancyFemale: 85.8, adultObesity: 19.6, childObesity: 14.6, smoking: 7.4, physicalActivity: 74.8, cvdMortality: 46.6, diabetes: 6.3 },
+    stats: { lifeExpectancyMale: 82.5, lifeExpectancyFemale: 85.8, adultObesity: 19.6, childObesity: 14.6, smoking: 7.4, physicalActivity: 74.8, cvdMortality: 46.6, diabetes: 6.3, hypertension: 14.4, depression: 13.0, asthma: 6.0, copd: 1.3, dementiaDiagnosis: 67.5, lowBirthWeight: 2.3 },
   },
   {
     name: "Bristol",
     region: "South West",
     code: "E06000023",
-    stats: { lifeExpectancyMale: 79.1, lifeExpectancyFemale: 83.4, adultObesity: 19.2, childObesity: 20.8, smoking: 12.6, physicalActivity: 76.3, cvdMortality: 76.1, diabetes: 6.0 },
+    stats: { lifeExpectancyMale: 79.1, lifeExpectancyFemale: 83.4, adultObesity: 19.2, childObesity: 20.8, smoking: 12.6, physicalActivity: 76.3, cvdMortality: 76.1, diabetes: 6.0, hypertension: 11.2, depression: 15.6, asthma: 6.1, copd: 1.8, dementiaDiagnosis: 74.6, lowBirthWeight: 2.8 },
   },
   {
     name: "Cornwall",
     region: "South West",
     code: "E06000052",
-    stats: { lifeExpectancyMale: 80.1, lifeExpectancyFemale: 83.8, adultObesity: 27.7, childObesity: 18.6, smoking: 11.5, physicalActivity: 74.4, cvdMortality: 67.8, diabetes: 7.6 },
+    stats: { lifeExpectancyMale: 80.1, lifeExpectancyFemale: 83.8, adultObesity: 27.7, childObesity: 18.6, smoking: 11.5, physicalActivity: 74.4, cvdMortality: 67.8, diabetes: 7.6, hypertension: 18.1, depression: 14.6, asthma: 8.0, copd: 2.5, dementiaDiagnosis: 61.9, lowBirthWeight: 2.3 },
   },
   {
     name: "Leeds",
     region: "Yorkshire and the Humber",
     code: "E08000035",
-    stats: { lifeExpectancyMale: 79.1, lifeExpectancyFemale: 83.0, adultObesity: 26.6, childObesity: 22.8, smoking: 12.8, physicalActivity: 70.4, cvdMortality: 79.9, diabetes: 7.1 },
+    stats: { lifeExpectancyMale: 79.1, lifeExpectancyFemale: 83.0, adultObesity: 26.6, childObesity: 22.8, smoking: 12.8, physicalActivity: 70.4, cvdMortality: 79.9, diabetes: 7.1, hypertension: 13.9, depression: 13.0, asthma: 6.3, copd: 1.9, dementiaDiagnosis: 73.6, lowBirthWeight: 2.9 },
   },
   {
     name: "Sheffield",
     region: "Yorkshire and the Humber",
     code: "E08000019",
-    stats: { lifeExpectancyMale: 79.2, lifeExpectancyFemale: 82.8, adultObesity: 27.6, childObesity: 24.1, smoking: 11.5, physicalActivity: 69.8, cvdMortality: 86.0, diabetes: 7.1 },
+    stats: { lifeExpectancyMale: 79.2, lifeExpectancyFemale: 82.8, adultObesity: 27.6, childObesity: 24.1, smoking: 11.5, physicalActivity: 69.8, cvdMortality: 86.0, diabetes: 7.1, hypertension: 14.0, depression: 14.2, asthma: 7.4, copd: 2.1, dementiaDiagnosis: 72.6, lowBirthWeight: 3.5 },
   },
   {
     name: "Kingston upon Hull",
     region: "Yorkshire and the Humber",
     code: "E06000010",
-    stats: { lifeExpectancyMale: 75.7, lifeExpectancyFemale: 80.9, adultObesity: 34.2, childObesity: 27.8, smoking: 18.4, physicalActivity: 60.0, cvdMortality: 127.5, diabetes: 9.1 },
+    stats: { lifeExpectancyMale: 75.7, lifeExpectancyFemale: 80.9, adultObesity: 34.2, childObesity: 27.8, smoking: 18.4, physicalActivity: 60.0, cvdMortality: 127.5, diabetes: 9.1, hypertension: 15.5, depression: 14.1, asthma: 6.3, copd: 3.2, dementiaDiagnosis: 69.2, lowBirthWeight: 2.4 },
   },
   {
     name: "Birmingham",
     region: "West Midlands",
     code: "E08000025",
-    stats: { lifeExpectancyMale: 77.1, lifeExpectancyFemale: 82.5, adultObesity: 27.9, childObesity: 27.0, smoking: 12.2, physicalActivity: 63.3, cvdMortality: 94.3, diabetes: 9.5 },
+    stats: { lifeExpectancyMale: 77.1, lifeExpectancyFemale: 82.5, adultObesity: 27.9, childObesity: 27.0, smoking: 12.2, physicalActivity: 63.3, cvdMortality: 94.3, diabetes: 9.5, hypertension: 12.6, depression: 12.7, asthma: 6.3, copd: 1.4, dementiaDiagnosis: 63.9, lowBirthWeight: 4.2 },
   },
   {
     name: "Manchester",
     region: "North West",
     code: "E08000003",
-    stats: { lifeExpectancyMale: 77.2, lifeExpectancyFemale: 81.1, adultObesity: 27.0, childObesity: 26.9, smoking: 15.6, physicalActivity: 69.0, cvdMortality: 118.3, diabetes: 6.7 },
+    stats: { lifeExpectancyMale: 77.2, lifeExpectancyFemale: 81.1, adultObesity: 27.0, childObesity: 26.9, smoking: 15.6, physicalActivity: 69.0, cvdMortality: 118.3, diabetes: 6.7, hypertension: 10.5, depression: 14.8, asthma: 5.8, copd: 1.9, dementiaDiagnosis: 75.1, lowBirthWeight: 3.5 },
   },
   {
     name: "Liverpool",
     region: "North West",
     code: "E08000012",
-    stats: { lifeExpectancyMale: 77.5, lifeExpectancyFemale: 81.1, adultObesity: 31.7, childObesity: 27.8, smoking: 11.9, physicalActivity: 65.9, cvdMortality: 87.7, diabetes: 7.0 },
+    stats: { lifeExpectancyMale: 77.5, lifeExpectancyFemale: 81.1, adultObesity: 31.7, childObesity: 27.8, smoking: 11.9, physicalActivity: 65.9, cvdMortality: 87.7, diabetes: 7.0, hypertension: 14.0, depression: 17.4, asthma: 6.1, copd: 3.0, dementiaDiagnosis: 67.7, lowBirthWeight: 2.6 },
   },
   {
     name: "Blackpool",
     region: "North West",
     code: "E06000009",
-    stats: { lifeExpectancyMale: 75.3, lifeExpectancyFemale: 79.9, adultObesity: 32.2, childObesity: 28.3, smoking: 20.8, physicalActivity: 58.5, cvdMortality: 126.3, diabetes: 9.6 },
+    stats: { lifeExpectancyMale: 75.3, lifeExpectancyFemale: 79.9, adultObesity: 32.2, childObesity: 28.3, smoking: 20.8, physicalActivity: 58.5, cvdMortality: 126.3, diabetes: 9.6, hypertension: 19.4, depression: 23.5, asthma: 8.1, copd: 3.9, dementiaDiagnosis: 70.3, lowBirthWeight: 3.2 },
   },
   {
     name: "Newcastle upon Tyne",
     region: "North East",
     code: "E08000021",
-    stats: { lifeExpectancyMale: 78.3, lifeExpectancyFemale: 82.4, adultObesity: 27.7, childObesity: 24.5, smoking: 10.4, physicalActivity: 69.4, cvdMortality: 97.1, diabetes: 7.0 },
+    stats: { lifeExpectancyMale: 78.3, lifeExpectancyFemale: 82.4, adultObesity: 27.7, childObesity: 24.5, smoking: 10.4, physicalActivity: 69.4, cvdMortality: 97.1, diabetes: 7.0, hypertension: 12.4, depression: 12.0, asthma: 6.0, copd: 2.0, dementiaDiagnosis: 72.4, lowBirthWeight: 3.9 },
   },
   {
     name: "Middlesbrough",
     region: "North East",
     code: "E06000002",
-    stats: { lifeExpectancyMale: 76.9, lifeExpectancyFemale: 81.6, adultObesity: 34.2, childObesity: 25.9, smoking: 14.1, physicalActivity: 54.9, cvdMortality: 99.3, diabetes: 9.1 },
+    stats: { lifeExpectancyMale: 76.9, lifeExpectancyFemale: 81.6, adultObesity: 34.2, childObesity: 25.9, smoking: 14.1, physicalActivity: 54.9, cvdMortality: 99.3, diabetes: 9.1, hypertension: 14.8, depression: 13.6, asthma: 6.7, copd: 2.9, dementiaDiagnosis: 75.7, lowBirthWeight: 3.4 },
   },
   {
     name: "Hartlepool",
     region: "North East",
     code: "E06000001",
-    stats: { lifeExpectancyMale: 77.8, lifeExpectancyFemale: 81.1, adultObesity: 35.8, childObesity: 25.7, smoking: 14.8, physicalActivity: 61.3, cvdMortality: 78.0, diabetes: 9.0 },
+    stats: { lifeExpectancyMale: 77.8, lifeExpectancyFemale: 81.1, adultObesity: 35.8, childObesity: 25.7, smoking: 14.8, physicalActivity: 61.3, cvdMortality: 78.0, diabetes: 9.0, hypertension: 18.6, depression: 15.7, asthma: 7.9, copd: 3.5, dementiaDiagnosis: 77.4, lowBirthWeight: 2.5 },
   },
   {
     name: "Nottingham",
     region: "East Midlands",
     code: "E06000018",
-    stats: { lifeExpectancyMale: 77.4, lifeExpectancyFemale: 81.4, adultObesity: 35.3, childObesity: 27.1, smoking: 13.1, physicalActivity: 65.4, cvdMortality: 99.7, diabetes: 6.6 },
+    stats: { lifeExpectancyMale: 77.4, lifeExpectancyFemale: 81.4, adultObesity: 35.3, childObesity: 27.1, smoking: 13.1, physicalActivity: 65.4, cvdMortality: 99.7, diabetes: 6.6, hypertension: 11.4, depression: 12.6, asthma: 5.6, copd: 1.7, dementiaDiagnosis: 80.8, lowBirthWeight: 3.9 },
   },
   {
     name: "Tower Hamlets",
     region: "London",
     code: "E09000030",
-    stats: { lifeExpectancyMale: 79.6, lifeExpectancyFemale: 83.4, adultObesity: 16.6, childObesity: 28.4, smoking: 14.2, physicalActivity: 69.1, cvdMortality: 78.4, diabetes: 7.2 },
+    stats: { lifeExpectancyMale: 79.6, lifeExpectancyFemale: 83.4, adultObesity: 16.6, childObesity: 28.4, smoking: 14.2, physicalActivity: 69.1, cvdMortality: 78.4, diabetes: 7.2, hypertension: 7.7, depression: 10.6, asthma: 4.6, copd: 0.9, dementiaDiagnosis: 75.6, lowBirthWeight: 4.8 },
   },
   {
     name: "South Tyneside",
     region: "North East",
     code: "E08000023",
-    stats: { lifeExpectancyMale: 77.5, lifeExpectancyFemale: 82.0, adultObesity: 37.8, childObesity: 27.3, smoking: 14.9, physicalActivity: 65.4, cvdMortality: 96.5, diabetes: 9.2 },
+    stats: { lifeExpectancyMale: 77.5, lifeExpectancyFemale: 82.0, adultObesity: 37.8, childObesity: 27.3, smoking: 14.9, physicalActivity: 65.4, cvdMortality: 96.5, diabetes: 9.2, hypertension: 17.2, depression: 17.4, asthma: 7.4, copd: 3.5, dementiaDiagnosis: 72.3, lowBirthWeight: 2.4 },
   },
 ];
 

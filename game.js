@@ -54,29 +54,50 @@
   // Build a deterministic quiz for a given day id (YYYY-MM-DD).
   function buildQuiz(dayId) {
     const rand = mulberry32(hashString("healthjuxt:" + dayId));
-    const pick = (arr) => arr[Math.floor(rand() * arr.length)];
+    const randInt = (n) => Math.floor(rand() * n);
+
+    // Deterministic Fisher-Yates shuffle driven by the seeded RNG.
+    function shuffled(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = randInt(i + 1);
+        const t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    // Use a distinct metric for each question so a day's quiz spans different
+    // topics. With more metrics than questions this just takes the first few;
+    // if there were ever fewer metrics, it cycles through them again.
+    const metricOrder = shuffled(METRIC_KEYS);
 
     const questions = [];
-    const seen = new Set();
-    let guard = 0;
+    const usedPairs = new Set();
 
-    while (questions.length < QUESTIONS_PER_QUIZ && guard++ < 500) {
-      const metricKey = pick(METRIC_KEYS);
-      let a = Math.floor(rand() * REGIONS.length);
-      let b = Math.floor(rand() * REGIONS.length);
-      if (a === b) continue;
+    for (let q = 0; q < QUESTIONS_PER_QUIZ; q++) {
+      const metricKey = metricOrder[q % metricOrder.length];
 
-      const va = REGIONS[a].stats[metricKey];
-      const vb = REGIONS[b].stats[metricKey];
-      // Skip ties and near-ties — they make for ambiguous questions.
-      if (Math.abs(va - vb) < 0.3) continue;
+      // Find two areas with a clear (non-tie) difference for this metric,
+      // avoiding any matchup already used earlier in the quiz.
+      for (let attempt = 0; attempt < 200; attempt++) {
+        const a = randInt(REGIONS.length);
+        const b = randInt(REGIONS.length);
+        if (a === b) continue;
 
-      // Avoid repeating the same region-pair + metric within one quiz.
-      const key = [metricKey, Math.min(a, b), Math.max(a, b)].join("|");
-      if (seen.has(key)) continue;
-      seen.add(key);
+        const va = REGIONS[a].stats[metricKey];
+        const vb = REGIONS[b].stats[metricKey];
+        // Skip ties and near-ties — they make for ambiguous questions.
+        if (Math.abs(va - vb) < 0.3) continue;
 
-      questions.push({ metricKey, left: REGIONS[a], right: REGIONS[b] });
+        const pairKey = Math.min(a, b) + "|" + Math.max(a, b);
+        if (usedPairs.has(pairKey)) continue;
+        usedPairs.add(pairKey);
+
+        questions.push({ metricKey, left: REGIONS[a], right: REGIONS[b] });
+        break;
+      }
     }
     return questions;
   }

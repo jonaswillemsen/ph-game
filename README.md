@@ -41,8 +41,9 @@ The figures in `data.js` are **real values from the OHID Fingertips API**
 ([Office for Health Improvement & Disparities](https://fingertips.phe.org.uk/)),
 for 20 English upper-tier / unitary local authorities (Fingertips area type
 **502**, "Upper tier local authorities (post 4/23)"). For each indicator the
-**latest published data period** is used, rounded to one decimal place. The
-snapshot was fetched on **2026-06-23** (see `SOURCE` in `data.js`).
+**latest data period for which every area has data** is used, rounded to one
+decimal place. The snapshot was fetched on **2026-06-23** (see `SOURCE` in
+`data.js`).
 
 | Metric | Fingertips indicator | Period |
 | --- | --- | ---: |
@@ -53,6 +54,12 @@ snapshot was fetched on **2026-06-23** (see `SOURCE` in `data.js`).
 | Physically active adults (150+ mins/week) | `93014` | 2024/25 |
 | Under-75 mortality from cardiovascular disease | `40401` | 2025 |
 | Recorded diabetes prevalence (QOF, 17+) | `241` | 2024/25 |
+| Hypertension prevalence (QOF) | `219` | 2024/25 |
+| Depression prevalence (QOF, 18+) | `848` | 2024/25 |
+| Asthma prevalence (QOF, 6+) | `90933` | 2024/25 |
+| COPD prevalence (QOF) | `253` | 2024/25 |
+| Dementia diagnosis rate (65+, *higher is better*) | `92949` | 2025 |
+| Low birth weight of term babies | `20101` | 2024 |
 
 > Figures come straight from Fingertips but are **rounded for display** and
 > cover a fixed snapshot, so treat them as indicative rather than the canonical
