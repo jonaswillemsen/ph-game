@@ -204,6 +204,43 @@ body {
   cursor: default;
 }
 
+.region-photo {
+  display: none;
+  width: 100%;
+  height: 96px;
+  margin-bottom: 4px;
+  border-radius: 10px;
+  background-color: var(--panel);
+  background-size: cover;
+  background-position: center;
+}
+
+.region-photo.loading {
+  display: block;
+  background-image: linear-gradient(
+    100deg,
+    var(--panel) 30%,
+    var(--panel-2) 50%,
+    var(--panel) 70%
+  );
+  background-size: 200% 100%;
+  animation: photo-shimmer 1.2s linear infinite;
+}
+
+.region-photo.has-photo {
+  display: block;
+  animation: none;
+}
+
+@keyframes photo-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
 .region-name {
   font-size: 1.15rem;
   font-weight: 700;
@@ -348,6 +385,9 @@ body {
 @media (max-width: 420px) {
   .region-card {
     min-height: 120px;
+  }
+  .region-photo {
+    height: 72px;
   }
   .vs {
     font-size: 0.85rem;

@@ -143,10 +143,83 @@
   function regionCardHTML(side) {
     return `
       <button class="region-card" data-side="${side}">
+        <span class="region-photo" aria-hidden="true"></span>
         <span class="region-name"></span>
         <span class="region-sub"></span>
         <span class="region-value"></span>
       </button>`;
+  }
+
+  // --- Area images (Wikipedia / Wikimedia Commons) ---------------------------
+  // Each card shows a representative photo, fetched at runtime from the
+  // Wikipedia REST summary API. Results are cached in memory for the session
+  // and in localStorage across visits; areas with no image just show text.
+
+  const IMG_CACHE_KEY = "healthjuxt.images.v1";
+  const imgMemo = new Map(); // title -> Promise<string|null>
+
+  function loadImgCache() {
+    try {
+      return JSON.parse(localStorage.getItem(IMG_CACHE_KEY)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function rememberImage(title, url) {
+    try {
+      const cache = loadImgCache();
+      cache[title] = url;
+      localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(cache));
+    } catch (e) {
+      /* storage unavailable — the in-memory cache still applies */
+    }
+  }
+
+  // The Wikipedia article to use for a region: an explicit `wiki` override if
+  // present, otherwise the display name (which redirects to the right article).
+  function areaTitle(region) {
+    return region.wiki || region.name;
+  }
+
+  // Resolve a region to a Wikipedia thumbnail URL, or null if none is found.
+  function loadAreaImage(region) {
+    const title = areaTitle(region);
+    if (imgMemo.has(title)) return imgMemo.get(title);
+
+    const cached = loadImgCache()[title];
+    if (typeof cached === "string") {
+      const hit = Promise.resolve(cached);
+      imgMemo.set(title, hit);
+      return hit;
+    }
+
+    const url =
+      "https://en.wikipedia.org/api/rest_v1/page/summary/" +
+      encodeURIComponent(title);
+    const p = fetch(url, { headers: { Accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const src = data && data.thumbnail && data.thumbnail.source;
+        if (src) rememberImage(title, src);
+        return src || null;
+      })
+      .catch(() => null);
+    imgMemo.set(title, p);
+    return p;
+  }
+
+  // Warm the cache for every area in the quiz so images are ready on render.
+  function prefetchQuizImages(questions) {
+    const seen = new Set();
+    questions.forEach((q) => {
+      [q.left, q.right].forEach((region) => {
+        const title = areaTitle(region);
+        if (seen.has(title)) return;
+        seen.add(title);
+        loadAreaImage(region);
+      });
+    });
   }
 
   // --- Rendering -------------------------------------------------------------
@@ -185,6 +258,27 @@
     card.querySelector(".region-name").textContent = region.name;
     card.querySelector(".region-sub").textContent = region.region;
     card.querySelector(".region-value").textContent = "";
+
+    const photo = card.querySelector(".region-photo");
+    photo.className = "region-photo loading";
+    photo.style.backgroundImage = "";
+
+    loadAreaImage(region).then((src) => {
+      if (!src) {
+        photo.className = "region-photo"; // nothing to show — collapse it
+        return;
+      }
+      // Decode the image before revealing it to avoid a flash of broken image.
+      const pre = new Image();
+      pre.onload = () => {
+        photo.style.backgroundImage = `url("${src}")`;
+        photo.className = "region-photo has-photo";
+      };
+      pre.onerror = () => {
+        photo.className = "region-photo";
+      };
+      pre.src = src;
+    });
   }
 
   function onAnswer(side) {
@@ -315,6 +409,7 @@
     state.questions = buildQuiz(state.dayId);
     state.index = 0;
     state.results = [];
+    prefetchQuizImages(state.questions);
 
     el("date-label").textContent = new Date().toLocaleDateString("en-GB", {
       weekday: "long",
