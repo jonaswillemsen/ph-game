@@ -27,9 +27,33 @@ const EXCLUDE = new Set([
 ]);
 
 // Override which Wikipedia article an area's image lookup uses, where the plain
-// display name isn't a usable article (e.g. it's a disambiguation page).
+// display name isn't a usable article (a disambiguation page) or its lead image
+// isn't a photo (a coat of arms, flag or map). Most overrides point at the
+// area's principal town, which reliably has a representative photo.
 const WIKI = {
   "Kensington and Chelsea": "Royal Borough of Kensington and Chelsea",
+  "Barking and Dagenham": "Barking, London",
+  Barnet: "Chipping Barnet",
+  "Bournemouth, Christchurch and Poole": "Bournemouth",
+  Brent: "Wembley",
+  "Buckinghamshire UA": "Aylesbury",
+  Bury: "Bury, Greater Manchester",
+  Camden: "Camden Town",
+  Enfield: "Enfield Town",
+  Hackney: "Hackney, London",
+  Halton: "Runcorn",
+  Harrow: "Harrow, London",
+  Knowsley: "Huyton",
+  Merton: "Wimbledon, London",
+  "North Somerset": "Weston-super-Mare",
+  "North Yorkshire UA": "Harrogate",
+  Redbridge: "Ilford",
+  Sefton: "Southport",
+  "Somerset UA": "Taunton",
+  "St. Helens": "St Helens, Merseyside",
+  Sutton: "Sutton, London",
+  "Waltham Forest": "Walthamstow",
+  Wirral: "Birkenhead",
 };
 
 // metricKey -> { id: Fingertips indicator id, sex: row "Sex" value to keep }

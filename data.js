@@ -174,12 +174,14 @@ const REGIONS = [
     name: "Barking and Dagenham",
     region: "London",
     code: "E09000002",
+    wiki: "Barking, London",
     stats: { lifeExpectancyMale: 77.8, lifeExpectancyFemale: 82.2, adultObesity: 35.0, childObesity: 28.3, smoking: 13.0, physicalActivity: 58.7, cvdMortality: 110.6, diabetes: 10.7, hypertension: 12.4, depression: 9.4, asthma: 4.7, copd: 1.3, dementiaDiagnosis: 63.2, lowBirthWeight: 4.1 },
   },
   {
     name: "Barnet",
     region: "London",
     code: "E09000003",
+    wiki: "Chipping Barnet",
     stats: { lifeExpectancyMale: 82.9, lifeExpectancyFemale: 85.5, adultObesity: 16.3, childObesity: 20.0, smoking: 7.8, physicalActivity: 63.5, cvdMortality: 48.9, diabetes: 7.2, hypertension: 12.1, depression: 10.8, asthma: 4.4, copd: 1.0, dementiaDiagnosis: 65.0, lowBirthWeight: 2.7 },
   },
   {
@@ -234,6 +236,7 @@ const REGIONS = [
     name: "Bournemouth, Christchurch and Poole",
     region: "South West",
     code: "E06000058",
+    wiki: "Bournemouth",
     stats: { lifeExpectancyMale: 81.0, lifeExpectancyFemale: 85.0, adultObesity: 27.3, childObesity: 20.4, smoking: 12.1, physicalActivity: 68.2, cvdMortality: 60.2, diabetes: 7.0, hypertension: 15.5, depression: 13.3, asthma: 7.2, copd: 2.0, dementiaDiagnosis: 62.9, lowBirthWeight: 2.6 },
   },
   {
@@ -252,6 +255,7 @@ const REGIONS = [
     name: "Brent",
     region: "London",
     code: "E09000005",
+    wiki: "Wembley",
     stats: { lifeExpectancyMale: 80.6, lifeExpectancyFemale: 85.9, adultObesity: 22.8, childObesity: 24.7, smoking: 8.1, physicalActivity: 61.0, cvdMortality: 72.9, diabetes: 8.1, hypertension: 10.8, depression: 8.6, asthma: 3.8, copd: 0.7, dementiaDiagnosis: 60.3, lowBirthWeight: 3.9 },
   },
   {
@@ -276,12 +280,14 @@ const REGIONS = [
     name: "Buckinghamshire UA",
     region: "South East",
     code: "E06000060",
+    wiki: "Aylesbury",
     stats: { lifeExpectancyMale: 82.2, lifeExpectancyFemale: 85.4, adultObesity: 22.4, childObesity: 17.3, smoking: 12.3, physicalActivity: 71.3, cvdMortality: 52.0, diabetes: 7.0, hypertension: 15.1, depression: 13.5, asthma: 6.5, copd: 1.2, dementiaDiagnosis: 57.8, lowBirthWeight: 2.6 },
   },
   {
     name: "Bury",
     region: "North West",
     code: "E08000002",
+    wiki: "Bury, Greater Manchester",
     stats: { lifeExpectancyMale: 78.7, lifeExpectancyFemale: 82.3, adultObesity: 34.1, childObesity: 25.1, smoking: 24.9, physicalActivity: 65.8, cvdMortality: 89.9, diabetes: 8.1, hypertension: 15.2, depression: 17.8, asthma: 7.0, copd: 2.1, dementiaDiagnosis: 75.1, lowBirthWeight: 2.6 },
   },
   {
@@ -300,6 +306,7 @@ const REGIONS = [
     name: "Camden",
     region: "London",
     code: "E09000007",
+    wiki: "Camden Town",
     stats: { lifeExpectancyMale: 80.8, lifeExpectancyFemale: 86.0, adultObesity: 10.4, childObesity: 21.8, smoking: 18.0, physicalActivity: 73.1, cvdMortality: 62.2, diabetes: 4.1, hypertension: 8.7, depression: 11.6, asthma: 4.0, copd: 1.1, dementiaDiagnosis: 74.3, lowBirthWeight: 3.2 },
   },
   {
@@ -414,6 +421,7 @@ const REGIONS = [
     name: "Enfield",
     region: "London",
     code: "E09000010",
+    wiki: "Enfield Town",
     stats: { lifeExpectancyMale: 80.7, lifeExpectancyFemale: 84.7, adultObesity: 25.3, childObesity: 26.4, smoking: 13.1, physicalActivity: 64.0, cvdMortality: 71.9, diabetes: 9.0, hypertension: 13.9, depression: 11.1, asthma: 4.9, copd: 1.0, dementiaDiagnosis: 64.2, lowBirthWeight: 3.3 },
   },
   {
@@ -444,12 +452,14 @@ const REGIONS = [
     name: "Hackney",
     region: "London",
     code: "E09000012",
+    wiki: "Hackney, London",
     stats: { lifeExpectancyMale: 79.5, lifeExpectancyFemale: 83.7, adultObesity: 26.2, childObesity: 24.9, smoking: 14.3, physicalActivity: 72.5, cvdMortality: 80.9, diabetes: 6.0, hypertension: 9.2, depression: 13.4, asthma: 4.8, copd: 1.0, dementiaDiagnosis: 68.4, lowBirthWeight: 2.7 },
   },
   {
     name: "Halton",
     region: "North West",
     code: "E06000006",
+    wiki: "Runcorn",
     stats: { lifeExpectancyMale: 76.9, lifeExpectancyFemale: 82.6, adultObesity: 34.5, childObesity: 26.6, smoking: 20.1, physicalActivity: 61.7, cvdMortality: 101.5, diabetes: 8.9, hypertension: 17.7, depression: 20.9, asthma: 7.9, copd: 3.2, dementiaDiagnosis: 66.2, lowBirthWeight: 1.7 },
   },
   {
@@ -474,6 +484,7 @@ const REGIONS = [
     name: "Harrow",
     region: "London",
     code: "E09000015",
+    wiki: "Harrow, London",
     stats: { lifeExpectancyMale: 83.1, lifeExpectancyFemale: 86.3, adultObesity: 13.3, childObesity: 22.3, smoking: 14.1, physicalActivity: 66.2, cvdMortality: 61.0, diabetes: 10.6, hypertension: 13.8, depression: 9.3, asthma: 5.2, copd: 0.8, dementiaDiagnosis: 66.2, lowBirthWeight: 4.6 },
   },
   {
@@ -559,6 +570,7 @@ const REGIONS = [
     name: "Knowsley",
     region: "North West",
     code: "E08000011",
+    wiki: "Huyton",
     stats: { lifeExpectancyMale: 77.7, lifeExpectancyFemale: 80.9, adultObesity: 35.8, childObesity: 30.1, smoking: 23.4, physicalActivity: 60.4, cvdMortality: 84.0, diabetes: 8.6, hypertension: 16.7, depression: 22.5, asthma: 7.1, copd: 3.6, dementiaDiagnosis: 64.1, lowBirthWeight: 2.3 },
   },
   {
@@ -631,6 +643,7 @@ const REGIONS = [
     name: "Merton",
     region: "London",
     code: "E09000024",
+    wiki: "Wimbledon, London",
     stats: { lifeExpectancyMale: 81.6, lifeExpectancyFemale: 84.9, adultObesity: 15.4, childObesity: 19.7, smoking: 10.4, physicalActivity: 72.0, cvdMortality: 59.1, diabetes: 7.0, hypertension: 11.3, depression: 10.7, asthma: 4.7, copd: 0.9, dementiaDiagnosis: 68.4, lowBirthWeight: 3.1 },
   },
   {
@@ -685,6 +698,7 @@ const REGIONS = [
     name: "North Somerset",
     region: "South West",
     code: "E06000024",
+    wiki: "Weston-super-Mare",
     stats: { lifeExpectancyMale: 80.4, lifeExpectancyFemale: 84.9, adultObesity: 24.0, childObesity: 17.7, smoking: 14.4, physicalActivity: 68.8, cvdMortality: 53.3, diabetes: 8.1, hypertension: 17.6, depression: 16.9, asthma: 7.5, copd: 2.3, dementiaDiagnosis: 71.8, lowBirthWeight: 2.1 },
   },
   {
@@ -697,6 +711,7 @@ const REGIONS = [
     name: "North Yorkshire UA",
     region: "Yorkshire and the Humber",
     code: "E06000065",
+    wiki: "Harrogate",
     stats: { lifeExpectancyMale: 81.3, lifeExpectancyFemale: 84.8, adultObesity: 23.7, childObesity: 19.3, smoking: 8.8, physicalActivity: 71.8, cvdMortality: 60.2, diabetes: 7.8, hypertension: 19.1, depression: 13.4, asthma: 7.8, copd: 2.1, dementiaDiagnosis: 60.0, lowBirthWeight: 2.5 },
   },
   {
@@ -757,6 +772,7 @@ const REGIONS = [
     name: "Redbridge",
     region: "London",
     code: "E09000026",
+    wiki: "Ilford",
     stats: { lifeExpectancyMale: 81.9, lifeExpectancyFemale: 85.3, adultObesity: 19.1, childObesity: 23.1, smoking: 4.8, physicalActivity: 64.7, cvdMortality: 67.3, diabetes: 10.2, hypertension: 11.9, depression: 7.5, asthma: 4.9, copd: 0.6, dementiaDiagnosis: 63.8, lowBirthWeight: 5.2 },
   },
   {
@@ -805,6 +821,7 @@ const REGIONS = [
     name: "Sefton",
     region: "North West",
     code: "E08000014",
+    wiki: "Southport",
     stats: { lifeExpectancyMale: 78.7, lifeExpectancyFemale: 83.0, adultObesity: 30.8, childObesity: 24.7, smoking: 16.5, physicalActivity: 67.8, cvdMortality: 73.1, diabetes: 8.0, hypertension: 18.7, depression: 17.7, asthma: 7.1, copd: 2.5, dementiaDiagnosis: 68.5, lowBirthWeight: 2.4 },
   },
   {
@@ -835,6 +852,7 @@ const REGIONS = [
     name: "Somerset UA",
     region: "South West",
     code: "E06000066",
+    wiki: "Taunton",
     stats: { lifeExpectancyMale: 80.6, lifeExpectancyFemale: 84.4, adultObesity: 33.2, childObesity: 21.9, smoking: 13.3, physicalActivity: 71.9, cvdMortality: 58.5, diabetes: 8.2, hypertension: 18.7, depression: 17.9, asthma: 7.3, copd: 2.3, dementiaDiagnosis: 54.8, lowBirthWeight: 2.5 },
   },
   {
@@ -871,6 +889,7 @@ const REGIONS = [
     name: "St. Helens",
     region: "North West",
     code: "E08000013",
+    wiki: "St Helens, Merseyside",
     stats: { lifeExpectancyMale: 77.0, lifeExpectancyFemale: 81.0, adultObesity: 31.3, childObesity: 25.1, smoking: 15.7, physicalActivity: 62.1, cvdMortality: 95.8, diabetes: 8.5, hypertension: 18.7, depression: 20.5, asthma: 8.2, copd: 2.9, dementiaDiagnosis: 66.8, lowBirthWeight: 2.5 },
   },
   {
@@ -919,6 +938,7 @@ const REGIONS = [
     name: "Sutton",
     region: "London",
     code: "E09000029",
+    wiki: "Sutton, London",
     stats: { lifeExpectancyMale: 81.3, lifeExpectancyFemale: 85.1, adultObesity: 30.2, childObesity: 19.1, smoking: 4.5, physicalActivity: 63.2, cvdMortality: 56.0, diabetes: 7.9, hypertension: 13.6, depression: 12.4, asthma: 6.0, copd: 1.3, dementiaDiagnosis: 76.7, lowBirthWeight: 3.0 },
   },
   {
@@ -979,6 +999,7 @@ const REGIONS = [
     name: "Waltham Forest",
     region: "London",
     code: "E09000031",
+    wiki: "Walthamstow",
     stats: { lifeExpectancyMale: 80.4, lifeExpectancyFemale: 84.5, adultObesity: 21.6, childObesity: 22.3, smoking: 7.3, physicalActivity: 68.3, cvdMortality: 85.9, diabetes: 7.5, hypertension: 11.4, depression: 10.3, asthma: 5.3, copd: 0.8, dementiaDiagnosis: 58.1, lowBirthWeight: 3.5 },
   },
   {
@@ -1051,6 +1072,7 @@ const REGIONS = [
     name: "Wirral",
     region: "North West",
     code: "E08000015",
+    wiki: "Birkenhead",
     stats: { lifeExpectancyMale: 78.5, lifeExpectancyFemale: 82.3, adultObesity: 36.7, childObesity: 23.4, smoking: 22.9, physicalActivity: 65.1, cvdMortality: 74.5, diabetes: 8.2, hypertension: 18.0, depression: 22.9, asthma: 7.8, copd: 2.6, dementiaDiagnosis: 66.5, lowBirthWeight: 3.1 },
   },
   {
