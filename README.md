@@ -28,7 +28,11 @@ Or just open `index.html` directly in a browser.
 - **`game.js`** — quiz generation and gameplay. The day's quiz is generated from
   a seeded PRNG keyed on the UTC date, so everyone playing on the same day gets
   the same questions (just like Urban Stats). Results and your daily streak are
-  stored in `localStorage`.
+  stored in `localStorage`. Each area card also shows a representative photo
+  fetched at runtime from the [Wikipedia REST summary
+  API](https://en.wikipedia.org/api/rest_v1/) (cached in `localStorage`); areas
+  with no image simply show text. To override which article an area uses, add a
+  `wiki: "Article title"` field to that region in `data.js`.
 - **`index.html` / `styles.css`** — the interface.
 
 ## The data
