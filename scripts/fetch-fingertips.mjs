@@ -8,39 +8,29 @@
 //
 // No dependencies — uses the built-in global fetch (Node 18+).
 //
-// Data source: OHID Fingertips (https://fingertips.phe.org.uk/), area type 502
-// "Upper tier local authorities (post 4/23)". For each indicator the latest
-// available data period is used and the value rounded to one decimal place.
+// Data source: OHID Fingertips (https://fingertips.phe.org.uk/). The area list
+// is the full set of area type 502 "Upper tier local authorities (post 4/23)"
+// — i.e. all counties, unitary authorities, metropolitan districts and London
+// boroughs — minus two tiny outliers (see EXCLUDE). For each indicator the
+// latest period for which every area has data is used, rounded to one decimal.
 
 const API = "https://fingertips.phe.org.uk/api";
 const CHILD_AREA_TYPE = 502; // Upper tier local authorities (post 4/23)
 const PARENT_AREA_TYPE = 15; // England
+const REGION_AREA_TYPE = 6; // Government Office Region (E12)
 
-// The areas in the quiz: [ONS code, display name, region, optional Wikipedia
-// article title]. The 4th element overrides which article the game's image
-// lookup uses, for cases where the plain name isn't a usable article.
-const AREAS = [
-  ["E09000020", "Kensington and Chelsea", "London", "Royal Borough of Kensington and Chelsea"],
-  ["E09000033", "Westminster", "London"],
-  ["E09000027", "Richmond upon Thames", "London"],
-  ["E06000041", "Wokingham", "South East"],
-  ["E10000030", "Surrey", "South East"],
-  ["E06000023", "Bristol", "South West"],
-  ["E06000052", "Cornwall", "South West"],
-  ["E08000035", "Leeds", "Yorkshire and the Humber"],
-  ["E08000019", "Sheffield", "Yorkshire and the Humber"],
-  ["E06000010", "Kingston upon Hull", "Yorkshire and the Humber"],
-  ["E08000025", "Birmingham", "West Midlands"],
-  ["E08000003", "Manchester", "North West"],
-  ["E08000012", "Liverpool", "North West"],
-  ["E06000009", "Blackpool", "North West"],
-  ["E08000021", "Newcastle upon Tyne", "North East"],
-  ["E06000002", "Middlesbrough", "North East"],
-  ["E06000001", "Hartlepool", "North East"],
-  ["E06000018", "Nottingham", "East Midlands"],
-  ["E09000030", "Tower Hamlets", "London"],
-  ["E08000023", "South Tyneside", "North East"],
-];
+// Tiny outliers routinely excluded from area comparisons — populations in the
+// hundreds/low thousands, with sparse or suppressed data for many indicators.
+const EXCLUDE = new Set([
+  "E09000001", // City of London
+  "E06000053", // Isles of Scilly
+]);
+
+// Override which Wikipedia article an area's image lookup uses, where the plain
+// display name isn't a usable article (e.g. it's a disambiguation page).
+const WIKI = {
+  "Kensington and Chelsea": "Royal Borough of Kensington and Chelsea",
+};
 
 // metricKey -> { id: Fingertips indicator id, sex: row "Sex" value to keep }
 const METRICS = {
@@ -61,7 +51,6 @@ const METRICS = {
 };
 
 const METRIC_ORDER = Object.keys(METRICS);
-const WANTED = new Set(AREAS.map(([code]) => code));
 
 // Minimal CSV parser handling quoted fields and embedded commas.
 function parseCsv(text) {
@@ -90,6 +79,38 @@ function parseCsv(text) {
   return rows;
 }
 
+async function fetchJson(path) {
+  const res = await fetch(`${API}${path}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`);
+  return res.json();
+}
+
+// Build [code, name, region, wiki?] for every area in the geography, sorted by
+// name, with the tiny outliers removed and Wikipedia overrides applied.
+async function buildAreas() {
+  const [areas, regions, parentToChild] = await Promise.all([
+    fetchJson(`/areas/by_area_type?area_type_id=${CHILD_AREA_TYPE}`),
+    fetchJson(`/areas/by_area_type?area_type_id=${REGION_AREA_TYPE}`),
+    fetchJson(
+      `/parent_to_child_areas?parent_area_type_id=${REGION_AREA_TYPE}` +
+        `&child_area_type_id=${CHILD_AREA_TYPE}`
+    ),
+  ]);
+
+  const regionName = new Map(
+    regions.map((r) => [r.Code, r.Name.replace(/\s*region \(statistical\)$/i, "").trim()])
+  );
+  const areaRegion = new Map();
+  for (const [regionCode, childCodes] of Object.entries(parentToChild)) {
+    for (const code of childCodes) areaRegion.set(code, regionName.get(regionCode) || "");
+  }
+
+  return areas
+    .filter((a) => !EXCLUDE.has(a.Code))
+    .map((a) => [a.Code, a.Name, areaRegion.get(a.Code) || "", WIKI[a.Name]])
+    .sort((x, y) => x[1].localeCompare(y[1], "en"));
+}
+
 async function fetchIndicatorCsv(id) {
   const url =
     `${API}/all_data/csv/by_indicator_id?indicator_ids=${id}` +
@@ -116,9 +137,12 @@ async function fetchIndicatorCsv(id) {
 }
 
 async function main() {
+  const AREAS = await buildAreas();
+  const WANTED = new Set(AREAS.map(([code]) => code));
+  process.stderr.write(`Areas: ${AREAS.length}\n`);
+
   const csvCache = new Map();
-  // metricKey -> Map(code -> { value, period })
-  const data = {};
+  const data = {}; // metricKey -> Map(code -> { value, period })
   const periods = {};
 
   for (const metric of METRIC_ORDER) {
