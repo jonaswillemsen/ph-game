@@ -33,30 +33,46 @@ Or just open `index.html` directly in a browser.
 
 ## The data
 
-The figures cover indicators such as:
+The figures in `data.js` are **real values from the OHID Fingertips API**
+([Office for Health Improvement & Disparities](https://fingertips.phe.org.uk/)),
+for 20 English upper-tier / unitary local authorities (Fingertips area type
+**502**, "Upper tier local authorities (post 4/23)"). For each indicator the
+**latest published data period** is used, rounded to one decimal place. The
+snapshot was fetched on **2026-06-23** (see `SOURCE` in `data.js`).
 
-- Male & female life expectancy at birth
-- Adult and Year 6 (age 10–11) obesity prevalence
-- Adult smoking prevalence
-- Physically active adults
-- Under-75 mortality from cardiovascular disease
-- Recorded diabetes prevalence
+| Metric | Fingertips indicator | Period |
+| --- | --- | ---: |
+| Male / female life expectancy at birth | `90366` | 2025 |
+| Adult obesity (Active Lives, self-reported) | `93881` | 2024/25 |
+| Year 6 (age 10–11) obesity, incl. severe | `90323` | 2024/25 |
+| Adult smoking (Annual Population Survey) | `92443` | 2024 |
+| Physically active adults (150+ mins/week) | `93014` | 2024/25 |
+| Under-75 mortality from cardiovascular disease | `40401` | 2025 |
+| Recorded diabetes prevalence (QOF, 17+) | `241` | 2024/25 |
 
-> **Caveat:** the values in `data.js` are **approximate and rounded**, chosen to
-> be realistic *relative to one another* for a fun, educational quiz. They are
-> based on the kinds of figures published by sources like:
->
-> - [OHID Fingertips](https://fingertips.phe.org.uk/) (Office for Health
->   Improvement & Disparities)
-> - [ONS](https://www.ons.gov.uk/) life expectancy data
-> - [NHS Digital](https://digital.nhs.uk/) / QOF prevalence data
->
-> They should **not** be cited as exact official statistics. To use live,
-> authoritative data, swap the `REGIONS` array in `data.js` for figures pulled
-> from the OHID Fingertips API.
+> Figures come straight from Fingertips but are **rounded for display** and
+> cover a fixed snapshot, so treat them as indicative rather than the canonical
+> live statistics. Always check [fingertips.phe.org.uk](https://fingertips.phe.org.uk/)
+> for the authoritative, up-to-date numbers.
+
+### Refreshing the data
+
+`scripts/fetch-fingertips.mjs` re-fetches the figures from Fingertips and prints
+a ready-to-paste `REGIONS` array (Node 18+, no dependencies):
+
+```bash
+node scripts/fetch-fingertips.mjs            # prints the REGIONS block to stdout
+```
+
+Coverage and the data period for each indicator are logged to stderr. Paste the
+output over the `REGIONS` array in `data.js` and update `SOURCE.fetched` (and the
+`period` fields in `METRICS` if they changed).
 
 ## Extending it
 
-- Add areas or metrics by editing the `REGIONS` and `METRICS` objects in
-  `data.js`. The game picks up new entries automatically.
+- Add areas by editing the `AREAS` list in `scripts/fetch-fingertips.mjs` (each
+  needs its ONS area code) and re-running the script, or by hand in `data.js`.
+- Add metrics by adding an entry to `METRICS` in both `data.js` and the script's
+  `METRICS` map (with the Fingertips indicator id). The game picks up new
+  entries automatically.
 - Tune `QUESTIONS_PER_QUIZ` in `game.js` to change the quiz length.
