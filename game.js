@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  const { METRICS, REGIONS } = window.PH_DATA;
+  const { METRICS, REGIONS, SOURCE } = window.PH_DATA;
   const METRIC_KEYS = Object.keys(METRICS);
   const QUESTIONS_PER_QUIZ = 5;
   const STORAGE_KEY = "healthjuxt.history.v1";
@@ -329,6 +329,30 @@
     renderQuestion();
   }
 
+  function renderDataSource() {
+    const node = el("data-source");
+    if (!node || !SOURCE) return;
+    const fetched = new Date(SOURCE.fetched);
+    const when = Number.isNaN(fetched.getTime())
+      ? SOURCE.fetched
+      : fetched.toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+    const link = document.createElement("a");
+    link.href = "https://fingertips.phe.org.uk/";
+    link.rel = "noopener";
+    link.textContent = SOURCE.provider;
+    node.textContent = "Data: ";
+    node.appendChild(link);
+    node.appendChild(
+      document.createTextNode(
+        ` — latest available period per indicator, ${SOURCE.areaType.name.toLowerCase()}. Fetched ${when}.`
+      )
+    );
+  }
+
   function init() {
     el("date-label").textContent = new Date().toLocaleDateString("en-GB", {
       weekday: "long",
@@ -336,6 +360,8 @@
       month: "long",
       year: "numeric",
     });
+
+    renderDataSource();
 
     const history = loadHistory();
     const played = history[todayId()];
