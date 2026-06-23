@@ -52,6 +52,12 @@ const METRICS = {
   physicalActivity: { id: 93014, sex: "Persons" },
   cvdMortality: { id: 40401, sex: "Persons" },
   diabetes: { id: 241, sex: "Persons" },
+  hypertension: { id: 219, sex: "Persons" },
+  depression: { id: 848, sex: "Persons" },
+  asthma: { id: 90933, sex: "Persons" },
+  copd: { id: 253, sex: "Persons" },
+  dementiaDiagnosis: { id: 92949, sex: "Persons" },
+  lowBirthWeight: { id: 20101, sex: "Persons" },
 };
 
 const METRIC_ORDER = Object.keys(METRICS);
@@ -118,17 +124,39 @@ async function main() {
   for (const metric of METRIC_ORDER) {
     const { id, sex } = METRICS[metric];
     if (!csvCache.has(id)) csvCache.set(id, await fetchIndicatorCsv(id));
-    const best = new Map(); // code -> { sortable, period, value }
+
+    // Gather every valid value per area, keyed by period, so we can pick a
+    // single period that all areas share rather than mixing periods.
+    const byArea = new Map(); // code -> Map(sortable -> { period, value })
     for (const row of csvCache.get(id)) {
       if (!WANTED.has(row.code)) continue;
       if (sex && row.sex !== sex) continue;
       const v = Number(row.value);
       if (row.value === "" || Number.isNaN(v)) continue;
-      const cur = best.get(row.code);
-      if (!cur || row.sortable > cur.sortable) {
-        best.set(row.code, { sortable: row.sortable, period: row.period, value: v });
-      }
+      if (!byArea.has(row.code)) byArea.set(row.code, new Map());
+      byArea.get(row.code).set(row.sortable, { period: row.period, value: v });
     }
+
+    // The latest period common to every covered area (fairer comparisons).
+    const covered = [...byArea.values()];
+    let chosen = null;
+    if (covered.length) {
+      const common = [...covered[0].keys()].filter((s) =>
+        covered.every((m) => m.has(s))
+      );
+      if (common.length) chosen = Math.max(...common);
+    }
+
+    const best = new Map(); // code -> { period, value }
+    for (const [code, periodsMap] of byArea) {
+      // Use the common period where possible; otherwise this area's latest.
+      const sortable =
+        chosen !== null && periodsMap.has(chosen)
+          ? chosen
+          : Math.max(...periodsMap.keys());
+      best.set(code, periodsMap.get(sortable));
+    }
+
     data[metric] = best;
     periods[metric] = [...new Set([...best.values()].map((b) => b.period))];
     const missing = AREAS.filter(([c]) => !best.has(c)).map(([, n]) => n);
