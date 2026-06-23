@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Health Juxt — the UK public health quiz</title>
+    <meta
+      name="description"
+      content="A daily 'which is higher?' quiz about public health figures across UK local areas."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>"
+    />
+  </head>
+  <body>
+    <main class="app">
+      <header class="masthead">
+        <h1>Health&nbsp;Juxt</h1>
+        <p class="tagline">Which UK area has the higher figure?</p>
+        <p class="date-label" id="date-label"></p>
+      </header>
+
+      <!-- Intro -->
+      <section class="card intro" id="intro">
+        <h2>Today's quiz</h2>
+        <p>
+          You'll see two UK local areas and a public health statistic. Pick the
+          area where the figure is <strong>higher</strong>. Five questions, a
+          fresh set every day.
+        </p>
+        <p class="intro-note" id="intro-note"></p>
+        <button class="btn primary" id="start-btn">Start</button>
+      </section>
+
+      <!-- Game -->
+      <section class="game hidden" id="game">
+        <div class="progress">
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <div class="progress-text" id="progress-text"></div>
+        </div>
+
+        <p class="question-prompt" id="question-prompt"></p>
+        <p class="metric-note" id="metric-note"></p>
+
+        <div class="board" id="board"></div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <button class="btn primary hidden" id="next-btn">Next question</button>
+      </section>
+
+      <!-- Results -->
+      <section class="card results hidden" id="results">
+        <h2>Your result</h2>
+        <div class="score-big" id="score-big"></div>
+        <p class="score-line" id="score-line"></p>
+        <div class="share-squares" id="share-squares"></div>
+        <p class="streak-line" id="streak-line"></p>
+        <button class="btn primary" id="share-btn">Share result</button>
+      </section>
+
+      <footer class="footer">
+        <p>
+          Inspired by
+          <a href="https://urbanstats.org/quiz.html" rel="noopener">Urban Stats</a>.
+          Figures are approximate and for fun &amp; education — see the
+          <a href="https://github.com/jonaswillemsen/ph-game" rel="noopener">README</a>
+          for sources and caveats.
+        </p>
+      </footer>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="game.js"></script>
+  </body>
+</html>

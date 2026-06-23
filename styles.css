@@ -1,0 +1,355 @@
+:root {
+  --bg: #0f1720;
+  --panel: #18222e;
+  --panel-2: #1f2c3a;
+  --ink: #eef3f8;
+  --muted: #9fb0c0;
+  --accent: #3ea6ff;
+  --good: #2ecc71;
+  --good-bg: rgba(46, 204, 113, 0.15);
+  --bad: #e74c3c;
+  --bad-bg: rgba(231, 76, 60, 0.15);
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(1200px 600px at 50% -10%, #1b2a3a, var(--bg));
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 18px 48px;
+}
+
+/* Masthead -------------------------------------------------------------- */
+
+.masthead {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.masthead h1 {
+  font-size: clamp(2rem, 7vw, 3rem);
+  margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #6dd5ff, #3ea6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.date-label {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Cards ----------------------------------------------------------------- */
+
+.card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.intro p {
+  color: var(--ink);
+}
+
+.intro-note {
+  color: var(--accent);
+  font-weight: 600;
+  min-height: 1.2em;
+}
+
+/* Buttons --------------------------------------------------------------- */
+
+.btn {
+  font: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  cursor: pointer;
+  transition: transform 0.05s ease, filter 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: #04263f;
+}
+
+.btn.primary:hover {
+  filter: brightness(1.08);
+}
+
+/* Progress -------------------------------------------------------------- */
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--panel-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #6dd5ff, #3ea6ff);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  color: var(--muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+/* Question -------------------------------------------------------------- */
+
+.question-prompt {
+  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  text-align: center;
+  margin: 0 0 4px;
+}
+
+.metric-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 18px;
+}
+
+/* Board ----------------------------------------------------------------- */
+
+.board {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.vs {
+  align-self: center;
+  color: var(--muted);
+  font-weight: 700;
+  font-style: italic;
+}
+
+.region-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 150px;
+  padding: 18px 12px;
+  background: var(--panel-2);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, transform 0.05s ease,
+    background 0.15s ease;
+}
+
+.region-card:hover:not(:disabled) {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.region-card:disabled {
+  cursor: default;
+}
+
+.region-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.region-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.region-value {
+  margin-top: 6px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  min-height: 1.4rem;
+  letter-spacing: -0.02em;
+}
+
+.region-card.correct {
+  border-color: var(--good);
+  background: var(--good-bg);
+}
+
+.region-card.correct .region-value {
+  color: var(--good);
+}
+
+.region-card.wrong {
+  border-color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.region-card.wrong .region-value {
+  color: var(--bad);
+}
+
+/* Feedback -------------------------------------------------------------- */
+
+.feedback {
+  min-height: 0;
+  margin: 16px 0 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: background 0.2s ease;
+}
+
+.feedback.good,
+.feedback.bad {
+  padding: 14px 16px;
+}
+
+.feedback.good {
+  background: var(--good-bg);
+}
+
+.feedback.bad {
+  background: var(--bad-bg);
+}
+
+.feedback-headline {
+  font-weight: 800;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.feedback.good .feedback-headline {
+  color: var(--good);
+}
+
+.feedback.bad .feedback-headline {
+  color: var(--bad);
+}
+
+.feedback-detail {
+  font-size: 0.95rem;
+}
+
+.metric-hint {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+#next-btn {
+  margin-top: 18px;
+  width: 100%;
+}
+
+/* Results --------------------------------------------------------------- */
+
+.results {
+  text-align: center;
+}
+
+.score-big {
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.score-line {
+  color: var(--muted);
+  margin-top: 0;
+}
+
+.share-squares {
+  font-size: 1.8rem;
+  letter-spacing: 4px;
+  margin: 12px 0;
+}
+
+.streak-line {
+  color: var(--accent);
+  font-weight: 600;
+  min-height: 1.2em;
+}
+
+#share-btn {
+  margin-top: 10px;
+}
+
+/* Footer ---------------------------------------------------------------- */
+
+.footer {
+  margin-top: 28px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.footer a {
+  color: var(--accent);
+}
+
+/* Utilities ------------------------------------------------------------- */
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 420px) {
+  .region-card {
+    min-height: 120px;
+  }
+  .vs {
+    font-size: 0.85rem;
+  }
+}
