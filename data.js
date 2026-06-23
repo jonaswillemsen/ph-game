@@ -42,7 +42,7 @@ const METRICS = {
   },
   adultObesity: {
     label: "Adult obesity",
-    short: "the percentage of adults living with obesity",
+    short: "percentage of adults living with obesity",
     unit: "%",
     higherIsBetter: false,
     description:
@@ -53,7 +53,7 @@ const METRICS = {
   },
   childObesity: {
     label: "Year 6 child obesity",
-    short: "the percentage of Year 6 children living with obesity",
+    short: "percentage of Year 6 children living with obesity",
     unit: "%",
     higherIsBetter: false,
     description:
@@ -64,7 +64,7 @@ const METRICS = {
   },
   smoking: {
     label: "Adult smoking",
-    short: "the percentage of adults who smoke",
+    short: "percentage of adults who smoke",
     unit: "%",
     higherIsBetter: false,
     description:
@@ -75,7 +75,7 @@ const METRICS = {
   },
   physicalActivity: {
     label: "Physically active adults",
-    short: "the percentage of physically active adults",
+    short: "percentage of physically active adults",
     unit: "%",
     higherIsBetter: true,
     description:
@@ -86,7 +86,7 @@ const METRICS = {
   },
   cvdMortality: {
     label: "Early CVD deaths",
-    short: "the rate of early deaths from cardiovascular disease",
+    short: "rate of early deaths from cardiovascular disease",
     unit: " /100k",
     higherIsBetter: false,
     description:
