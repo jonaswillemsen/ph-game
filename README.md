@@ -39,8 +39,10 @@ Or just open `index.html` directly in a browser.
 
 The figures in `data.js` are **real values from the OHID Fingertips API**
 ([Office for Health Improvement & Disparities](https://fingertips.phe.org.uk/)),
-for 20 English upper-tier / unitary local authorities (Fingertips area type
-**502**, "Upper tier local authorities (post 4/23)"). For each indicator the
+for **all 151 English upper-tier local authorities** — every county, unitary
+authority, metropolitan district and London borough (Fingertips area type
+**502**, "Upper tier local authorities (post 4/23)"), minus City of London and
+Isles of Scilly, two tiny outliers with sparse data. For each indicator the
 **latest data period for which every area has data** is used, rounded to one
 decimal place. The snapshot was fetched on **2026-06-23** (see `SOURCE` in
 `data.js`).
@@ -50,7 +52,7 @@ decimal place. The snapshot was fetched on **2026-06-23** (see `SOURCE` in
 | Male / female life expectancy at birth | `90366` | 2025 |
 | Adult obesity (Active Lives, self-reported) | `93881` | 2024/25 |
 | Year 6 (age 10–11) obesity, incl. severe | `90323` | 2024/25 |
-| Adult smoking (Annual Population Survey) | `92443` | 2024 |
+| Adult smoking (Annual Population Survey) | `92443` | 2022–24 |
 | Physically active adults (150+ mins/week) | `93014` | 2024/25 |
 | Under-75 mortality from cardiovascular disease | `40401` | 2025 |
 | Recorded diabetes prevalence (QOF, 17+) | `241` | 2024/25 |
@@ -81,8 +83,9 @@ output over the `REGIONS` array in `data.js` and update `SOURCE.fetched` (and th
 
 ## Extending it
 
-- Add areas by editing the `AREAS` list in `scripts/fetch-fingertips.mjs` (each
-  needs its ONS area code) and re-running the script, or by hand in `data.js`.
+- The area list is built automatically by `scripts/fetch-fingertips.mjs` from
+  the full set of area type 502. To change the geography, adjust `CHILD_AREA_TYPE`
+  (or the `EXCLUDE` set / `WIKI` overrides) in the script and re-run it.
 - Add metrics by adding an entry to `METRICS` in both `data.js` and the script's
   `METRICS` map (with the Fingertips indicator id). The game picks up new
   entries automatically.
