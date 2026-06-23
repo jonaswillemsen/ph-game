@@ -112,6 +112,7 @@ const REGIONS = [
     name: "Kensington and Chelsea",
     region: "London",
     code: "E09000020",
+    wiki: "Royal Borough of Kensington and Chelsea",
     stats: { lifeExpectancyMale: 84.6, lifeExpectancyFemale: 87.0, adultObesity: 12.2, childObesity: 18.0, smoking: 8.4, physicalActivity: 68.3, cvdMortality: 41.9, diabetes: 4.5 },
   },
   {

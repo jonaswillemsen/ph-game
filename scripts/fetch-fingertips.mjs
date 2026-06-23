@@ -16,9 +16,11 @@ const API = "https://fingertips.phe.org.uk/api";
 const CHILD_AREA_TYPE = 502; // Upper tier local authorities (post 4/23)
 const PARENT_AREA_TYPE = 15; // England
 
-// The areas in the quiz, keyed by ONS code, with their display region.
+// The areas in the quiz: [ONS code, display name, region, optional Wikipedia
+// article title]. The 4th element overrides which article the game's image
+// lookup uses, for cases where the plain name isn't a usable article.
 const AREAS = [
-  ["E09000020", "Kensington and Chelsea", "London"],
+  ["E09000020", "Kensington and Chelsea", "London", "Royal Borough of Kensington and Chelsea"],
   ["E09000033", "Westminster", "London"],
   ["E09000027", "Richmond upon Thames", "London"],
   ["E06000041", "Wokingham", "South East"],
@@ -141,14 +143,15 @@ async function main() {
   // snapshot baked into data.js.
   const round1 = (v) => (Math.round(v * 10) / 10).toFixed(1);
   const lines = ["const REGIONS = ["];
-  for (const [code, name, region] of AREAS) {
+  for (const [code, name, region, wiki] of AREAS) {
     const stats = METRIC_ORDER.map((m) => {
       const entry = data[m].get(code);
       return `${m}: ${entry ? round1(entry.value) : "null"}`;
     }).join(", ");
+    const wikiLine = wiki ? `\n    wiki: ${JSON.stringify(wiki)},` : "";
     lines.push(
       `  {\n    name: ${JSON.stringify(name)},\n    region: ${JSON.stringify(region)},` +
-      `\n    code: ${JSON.stringify(code)},\n    stats: { ${stats} },\n  },`
+      `\n    code: ${JSON.stringify(code)},${wikiLine}\n    stats: { ${stats} },\n  },`
     );
   }
   lines.push("];");
